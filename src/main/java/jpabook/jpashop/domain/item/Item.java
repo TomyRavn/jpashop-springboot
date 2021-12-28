@@ -3,6 +3,7 @@ package jpabook.jpashop.domain.item;
 import jpabook.jpashop.domain.Category;
 import jpabook.jpashop.exception.NotEnoughStockException;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "dtype")
 @Getter
-//@Setter                                     //Setter 대신 Business 로직을 가지고 변경해야 함(유지보수)
+@Setter                                     //Setter 대신 Business 로직을 가지고 변경해야 함(유지보수)
 public abstract class Item {                //구현체를 가지고 만들 예정이기에 추상 클래스로 생성(여러 종류의 Item ; Album, Book, Movie)
 
     @Id
