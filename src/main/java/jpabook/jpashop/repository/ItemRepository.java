@@ -18,6 +18,8 @@ public class ItemRepository {
             em.persist(item);
         }else{                          //DB에서 가져온 것을 update(merge는 완전한 update의 개념은 아님)
             em.merge(item);
+            // merge : find한 값을 parameter의 값으로 전부 update
+            // ==> 주의점 : 모든 속성이 변경됨 / 값이 없으면 null로 update되는 위험 (*****) / 변경 감지가 아님
         }
     }
 

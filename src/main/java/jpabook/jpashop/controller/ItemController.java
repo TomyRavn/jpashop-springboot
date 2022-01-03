@@ -66,9 +66,11 @@ public class ItemController {
     }
 
     @PostMapping("items/{itemId}/edit")
-    public String updateItem(@PathVariable String itemId, @ModelAttribute("form") BookForm form){
+    public String updateItem(@PathVariable Long itemId, @ModelAttribute("form") BookForm form){
 
+        //어설프게 Entity를 파라미터로 쓰지 않는 것을 권장(명확성 ▲)
         //ID를 검증하는 로직이 있거나 session(최근에는 잘 쓰지 않음)으로 풀어내는 방식 등의 로직 필요!
+        //update할 항목이 많으면 서비스쪽에 Dto 생성
         Book book = new Book();
         book.setId(form.getId());
         book.setName(form.getName());
@@ -76,8 +78,10 @@ public class ItemController {
         book.setStockQuantity(form.getStockQuantity());
         book.setAuthor(form.getAuthor());
         book.setIsbn(form.getIsbn());
-
         itemService.saveItem(book);
+
+        //itemService.updateItem(itemId, form.getName(), form.getPrice(), form.getStockQuantity());
+
         return "redirect:/items";
 
     }
