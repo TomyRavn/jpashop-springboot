@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,6 +18,7 @@ public class MemberApiController {
 
     private final MemberService memberService;
 
+    /** version 1 : 문제 코드 **/
     @PostMapping("/api/v1/members")
     public CreateMemberResponse saveMemberV1(@RequestBody @Valid Member member){
         //Entity는 여러 곳에서 사용될 수 있으므로 스펙이 언제든 바뀔 수 있다.
@@ -28,6 +31,12 @@ public class MemberApiController {
         Long id = memberService.join(member);
         return new CreateMemberResponse(id);
     }
+
+    @GetMapping("/api/v1/members")
+    public List<Member> membersV1() {
+        return memberService.findMembers();
+    }
+    /** end of version 1 **/
 
     /*
     회원 등록 API
@@ -57,10 +66,48 @@ public class MemberApiController {
         return new UpdateMemberResponse(findMember.getId(), findMember.getName());
     }
 
+    /*
+    회원 조회 API
+     */
+    @GetMapping("/api/v2/members")
+    public Result membersV2() {
+        List<Member> findMembers = memberService.findMembers();
+        List<MemberDto> collect = findMembers.stream()
+                .map(m -> new MemberDto(m.getName()))
+                .collect(Collectors.toList());
 
+        return new Result(collect);
+    }
+
+    /**
+     * JSON 배열 타입의 유연성을 높이기 위해, 한번 감싸서 내보내는 용도
+     * {
+     *     "count": 4,
+     *     "data": [
+     *         {
+     *              "id": 1,
+     *              "name": "test"
+     *         }
+     *     ]
+     * }
+     * 형식으로 내보내기 위함
+     *
+     * -> 기존 :
+     * [
+     *     {
+     *         "id": 1,
+     *         "name": "test"
+     *     }
+     * ]
+     */
+    @Data
+    @AllArgsConstructor
+    static class Result<T> {
+        private T data;
+    }
 
     /*
-    DTO
+    DTO : API 스펙과 1대1로 매칭(*** Entity가 API 스펙과 1대1로 매칭되어서는 안됨)
      */
     @Data
     static class UpdateMemberRequest {
@@ -87,6 +134,12 @@ public class MemberApiController {
         public CreateMemberResponse(Long id) {
             this.id = id;
         }
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class MemberDto {
+        private String name;
     }
 
 }
