@@ -38,10 +38,14 @@ public class Member {
     @Embedded
     private Address address;
 
+    //(1)
     //@JsonIgnore //API 제공 시 Entity에서 제거할 항목을 지정 가능, 하지만 Entity를 외부에 노출하는 것은 좋지 않음
     //API마다 필요한 사항이 달라서 문제 발생 가능 + 프레젠테이션 계층이 Entity에 추가되어 애플리케이션 수정 시 문제 발생(모든 Case에 적용 불가)
     //Entity 변경 시 API 스펙이 변하므로 장애 발생
     //유연성이 떨어짐(기본 Array와 별개의 속성 추가 시 JSON 스펙이 깨지는 문제)
+    
+    //(2)
+    @JsonIgnore //양방향 연관관계에서 API 생성 시, Entity를 바로 접근한다면 한 쪽은 Ignore 처리 해야 함
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
 

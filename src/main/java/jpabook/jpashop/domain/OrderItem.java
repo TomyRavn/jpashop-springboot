@@ -1,5 +1,6 @@
 package jpabook.jpashop.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jpabook.jpashop.domain.item.Item;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -24,6 +25,7 @@ public class OrderItem {
     @JoinColumn(name = "item_id")
     private Item item;
 
+    @JsonIgnore //양방향 연관관계에서 API 생성 시, Entity를 바로 접근한다면 한 쪽은 Ignore 처리 해야 함
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
