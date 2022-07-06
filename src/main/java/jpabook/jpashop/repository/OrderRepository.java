@@ -1,6 +1,7 @@
 package jpabook.jpashop.repository;
 
 import jpabook.jpashop.domain.Order;
+import jpabook.jpashop.repository.order.simplequery.OrderSimpleQueryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -114,7 +115,8 @@ public class OrderRepository {
 //                .fetch();
     }
 
-        /* 3. Querydsl로 처리 - 2 */
+
+    /* 3. Querydsl로 처리 - 2 */
 //    private BooleanExpression statusEq(OrderStatus statusCond){
 //        if(statusCond == null) return null;
 //        return order.status.eq(statusCond);
@@ -123,5 +125,34 @@ public class OrderRepository {
 //    private BooleanExpression nameLike(String nameCond){
 //        if(!StringUtils.hasText(nameCond)) return null;
 //        return member.name.like(nameCond);
+//    }
+
+
+    public List<Order> findAllWithMemberDelivery() {
+        return em.createQuery(
+                "select o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d", Order.class
+        ).getResultList();
+    }
+
+    //분리를 위해 OrderSimpleQueryRepository로 이동
+//    public List<OrderSimpleQueryDto> findOrderDtos() {
+//        /*
+//        return em.createQuery("select o from Order o" +
+//                " join o.member m" +
+//                " join o.delivery d", OrderSimpleQueryDto.class
+//        ).getResultList();
+//        */
+//
+//        //Entity나 Value of Object만 JPA는 반환 가능
+//        //DTO.class는 반환 불가 => 따라서 new Operation을 써야함
+//
+//        /* JPA는 코드를 처리할 때 Entity를 식별자로 처리하기 때문에 parameter에 o 사용 불가 */
+//        return em.createQuery("select new jpabook.jpashop.repository.OrderSimpleQueryDto(o.id, m.name, o.orderDate, o.status, d.address)" +
+//                " from Order o" +
+//                " join o.member m" +
+//                " join o.delivery d", OrderSimpleQueryDto.class
+//        ).getResultList();
 //    }
 }

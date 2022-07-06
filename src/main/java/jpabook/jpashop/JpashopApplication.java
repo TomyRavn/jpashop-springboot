@@ -1,6 +1,7 @@
 package jpabook.jpashop;
 
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
+import jpabook.jpashop.domain.Order;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -20,8 +21,12 @@ public class JpashopApplication {
 		//return new Hibernate5Module();
 
 		Hibernate5Module hibernate5Module = new Hibernate5Module();
-		hibernate5Module.configure(Hibernate5Module.Feature.FORCE_LAZY_LOADING, true);
+		//Entity를 외부에 노출하지 말아야 함
+//		hibernate5Module.configure(Hibernate5Module.Feature.FORCE_LAZY_LOADING, true);
+
 		return hibernate5Module;
+
+		//Entity를 외부에 노출하는 Hibernate5Module을 사용하기 보다 DTO 변환해서 반환하는 것을 권장
 	}
 
 }
